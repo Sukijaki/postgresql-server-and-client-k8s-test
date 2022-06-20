@@ -1,0 +1,46 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: postgresql
+  
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-server
+spec:
+  selector:
+    matchLabels:
+      app: postgres-server
+      spec:
+  volumes:
+    - name: postgres-pv-storage
+      persistentVolumeClaim:
+      claimName: postgres-pv-claim
+  template:
+    metadata:
+      labels:
+        app: postgres-server
+    spec:
+      containers:
+      - name: postgres-server
+        image: postgres:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_PASSWORD
+        valueFrom:
+        secretKeyRef:
+          name: postgres-secret-config
+          key: password
+            - name: PGDATA
+value: /var/lib/postgresql/data/pgdata
+volumeMounts:
+  - mountPath: /var/lib/postgresql/data
+    name: postgres-pv-storage
+
