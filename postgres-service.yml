@@ -8,11 +8,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres-server
-labels:
-  app: postgres-server
+  labels:
+    app: postgres-server
+  namespace: postgresql
 spec:
   type: NodePort
-ports:
-  - port: 5432
-selector:
-  app: postgres-server
+  ports:
+    - port: 5432
+  selector:
+    app: postgres-server

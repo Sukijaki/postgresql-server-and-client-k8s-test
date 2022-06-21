@@ -42,24 +42,28 @@ metadata:
     app: postgresql-client
   annotations:
     cluster-autoscaler.kubernetes.io/safe-to-evict: "true"    
-  spec:
+spec:
   serviceAccountName: postgresql-client
   securityContext:
     runAsNonRoot: true
     supplementalGroups: [ 10001] 
     fsGroup: 10001    
-containers:
+  containers:
     - name: postgresql-client
       image: andreswebs/postgresql-client
       imagePullPolicy: Always
+      resources:
+        limits:
+          memory: "128Mi"
+          cpu: "500m"
       securityContext:
         runAsUser: 1000      
       stdin: true
       tty: true
       env:
-       - name: POSTGRES_PASSWORD
-         valueFrom:
-         secretKeyRef:
-          name: postgres-secret-config
-          key: password
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret-config
+              key: password
       command: ["/bin/sh"]
