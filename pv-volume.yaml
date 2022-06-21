@@ -18,4 +18,4 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/Users/milos.jakovljevic/postgresql_k8s/data"
+    path: "/mnt/data"
